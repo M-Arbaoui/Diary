@@ -6,7 +6,7 @@
 
 @layer base {
   :root {
-    /* Warm paper palette */
+    /* Warm paper palette - Light mode */
     --background: 36 22% 96%;          /* #F7F5F2 */
     --foreground: 0 0% 17%;            /* #2B2B2B */
 
@@ -60,6 +60,60 @@
     --sidebar-accent-foreground: 0 0% 17%;
     --sidebar-border: 36 14% 89%;
     --sidebar-ring: 108 17% 60%;
+  }
+
+  :root.dark {
+    /* Dark mode palette */
+    --background: 36 15% 13%;           /* Deep warm dark #1F1815 */
+    --foreground: 36 30% 95%;           /* Light warm text */
+
+    --card: 36 15% 18%;                 /* Slightly lighter dark cards */
+    --card-foreground: 36 30% 95%;
+
+    --popover: 36 15% 18%;
+    --popover-foreground: 36 30% 95%;
+
+    --primary: 108 17% 50%;             /* Darker sage */
+    --primary-foreground: 36 30% 95%;
+
+    --secondary: 30 22% 52%;            /* Darker beige */
+    --secondary-foreground: 36 30% 95%;
+
+    --muted: 36 15% 30%;
+    --muted-foreground: 36 15% 65%;
+
+    --accent: 108 17% 35%;              /* Darker pale sage */
+    --accent-foreground: 36 30% 95%;
+
+    --destructive: 8 60% 50%;
+    --destructive-foreground: 36 30% 95%;
+
+    --border: 36 15% 25%;
+    --input: 36 15% 25%;
+    --ring: 108 17% 50%;
+
+    /* Dark mode custom tokens */
+    --paper: 36 15% 13%;
+    --ink: 36 30% 95%;
+    --ink-muted: 36 15% 65%;
+    --sage: 108 17% 50%;
+    --sage-soft: 108 17% 30%;
+    --beige: 30 22% 52%;
+    --beige-soft: 30 22% 25%;
+
+    --gradient-warm: linear-gradient(135deg, hsl(36 15% 20%) 0%, hsl(30 18% 18%) 50%, hsl(108 17% 25%) 100%);
+    --gradient-sage: linear-gradient(135deg, hsl(108 17% 40%), hsl(108 17% 50%));
+    --shadow-soft: 0 1px 2px hsl(36 15% 5% / 0.6), 0 8px 24px -12px hsl(36 15% 0% / 0.5);
+    --shadow-float: 0 10px 40px -12px hsl(108 17% 20% / 0.5);
+
+    --sidebar-background: 36 15% 13%;
+    --sidebar-foreground: 36 30% 95%;
+    --sidebar-primary: 108 17% 50%;
+    --sidebar-primary-foreground: 36 30% 95%;
+    --sidebar-accent: 36 15% 30%;
+    --sidebar-accent-foreground: 36 30% 95%;
+    --sidebar-border: 36 15% 25%;
+    --sidebar-ring: 108 17% 50%;
   }
 
 }

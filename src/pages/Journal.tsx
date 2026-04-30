@@ -27,6 +27,19 @@ export default function Journal() {
     localStorage.setItem(VIEW_KEY, JSON.stringify(view));
   }, [view]);
 
+  useEffect(() => {
+    const handleKeydown = (e: KeyboardEvent) => {
+      // Cmd/Ctrl + N to create new entry
+      if ((e.metaKey || e.ctrlKey) && e.key === "n") {
+        e.preventDefault();
+        setView({ mode: "edit", id: "new" });
+      }
+    };
+
+    window.addEventListener("keydown", handleKeydown);
+    return () => window.removeEventListener("keydown", handleKeydown);
+  }, []);
+
   const [query, setQuery] = useState("");
   const [mood, setMood] = useState<Mood | "all">("all");
 
@@ -81,6 +94,7 @@ export default function Journal() {
         <Button
           onClick={() => setView({ mode: "edit", id: "new" })}
           className="rounded-full bg-foreground text-background hover:bg-foreground/90 h-11 px-6"
+          title="Create new entry (Cmd/Ctrl + N)"
         >
           <Plus className="h-4 w-4 mr-1.5" /> New entry
         </Button>
@@ -244,6 +258,31 @@ function EntryEditor({
   const initialized = useRef(false);
   const saveTimer = useRef<number | null>(null);
 
+  // Handle keyboard shortcuts
+  useEffect(() => {
+    const handleKeydown = (e: KeyboardEvent) => {
+      // Cmd/Ctrl + S to save and close
+      if ((e.metaKey || e.ctrlKey) && e.key === "s") {
+        e.preventDefault();
+        // Flush any pending debounced save immediately
+        if (saveTimer.current) window.clearTimeout(saveTimer.current);
+        if (title.trim() || content.trim()) {
+          if (currentId) {
+            update(currentId, { title, content, mood });
+          } else {
+            create({ title: title || "Untitled entry", content, mood });
+          }
+        }
+        localStorage.removeItem(DRAFT_KEY);
+        toast.success(currentId ? "Entry saved" : "Saved to your journal");
+        onClose();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeydown);
+    return () => window.removeEventListener("keydown", handleKeydown);
+  }, [title, content, mood, currentId, update, create, onClose]);
+
   // Keep a live draft snapshot of unsaved new entries so refresh never loses work
   useEffect(() => {
     if (currentId) return; // once saved, the entry itself is the source of truth
@@ -385,6 +424,7 @@ function EntryEditor({
           <Button
             onClick={handleDone}
             className="rounded-full bg-foreground text-background hover:bg-foreground/90 px-6"
+            title="Save entry (Cmd/Ctrl + S)"
           >
             Done
           </Button>
