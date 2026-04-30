@@ -1,16 +1,12 @@
 {
-  "buildCommand": "bun run build",
-  "outputDirectory": "dist",
-  "framework": "vite",
-  "functions": {
-    "api/**": {
-      "runtime": "nodejs18.x"
+  "experimentalServices": {
+    "frontend": {
+      "routePrefix": "/",
+      "framework": "vite"
+    },
+    "backend": {
+      "entrypoint": "backend/src/server.js",
+      "routePrefix": "/_/backend"
     }
-  },
-  "rewrites": [
-    {
-      "source": "/_/backend/(.*)",
-      "destination": "/api/backend"
-    }
-  ]
+  }
 }
