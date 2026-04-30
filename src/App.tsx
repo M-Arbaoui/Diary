@@ -5,9 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import AppLayout from "@/components/AppLayout";
 import Landing from "./pages/Landing";
-import Dashboard from "./pages/Dashboard";
-import Editor from "./pages/Editor";
-import Settings from "./pages/Settings";
+import Journal from "./pages/Journal";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -21,9 +19,7 @@ const App = () => (
         <Routes>
           <Route element={<AppLayout />}>
             <Route path="/" element={<Landing />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/editor/:id" element={<Editor />} />
-            <Route path="/settings" element={<Settings />} />
+            <Route path="/journal" element={<Journal />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
