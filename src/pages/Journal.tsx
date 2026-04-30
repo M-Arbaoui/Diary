@@ -9,9 +9,24 @@ import { toast } from "sonner";
 
 type View = { mode: "list" } | { mode: "edit"; id: string | "new" };
 
+const VIEW_KEY = "my-diary-view";
+
+function loadView(): View {
+  try {
+    const raw = localStorage.getItem(VIEW_KEY);
+    if (raw) return JSON.parse(raw) as View;
+  } catch { /* ignore */ }
+  return { mode: "list" };
+}
+
 export default function Journal() {
   const { entries, loading, create, update, remove, get } = useEntries();
-  const [view, setView] = useState<View>({ mode: "list" });
+  const [view, setView] = useState<View>(loadView);
+
+  useEffect(() => {
+    localStorage.setItem(VIEW_KEY, JSON.stringify(view));
+  }, [view]);
+
   const [query, setQuery] = useState("");
   const [mood, setMood] = useState<Mood | "all">("all");
 
@@ -209,15 +224,35 @@ function EntryEditor({
 }) {
   const isNew = entryId === "new";
   const existing = isNew ? null : get(entryId);
+  const DRAFT_KEY = "my-diary-draft-new";
 
-  const [title, setTitle] = useState(existing?.title ?? "");
-  const [content, setContent] = useState(existing?.content ?? "");
-  const [mood, setMood] = useState<Mood>(existing?.mood ?? "calm");
+  // Restore an in-progress new-entry draft if present
+  const draft = (() => {
+    if (!isNew) return null;
+    try {
+      const raw = localStorage.getItem(DRAFT_KEY);
+      return raw ? (JSON.parse(raw) as { title: string; content: string; mood: Mood }) : null;
+    } catch { return null; }
+  })();
+
+  const [title, setTitle] = useState(existing?.title ?? draft?.title ?? "");
+  const [content, setContent] = useState(existing?.content ?? draft?.content ?? "");
+  const [mood, setMood] = useState<Mood>(existing?.mood ?? draft?.mood ?? "calm");
   const [currentId, setCurrentId] = useState<string | null>(existing?.id ?? null);
   const [status, setStatus] = useState<"idle" | "saving" | "saved">("idle");
 
   const initialized = useRef(false);
   const saveTimer = useRef<number | null>(null);
+
+  // Keep a live draft snapshot of unsaved new entries so refresh never loses work
+  useEffect(() => {
+    if (currentId) return; // once saved, the entry itself is the source of truth
+    if (!title.trim() && !content.trim()) {
+      localStorage.removeItem(DRAFT_KEY);
+      return;
+    }
+    localStorage.setItem(DRAFT_KEY, JSON.stringify({ title, content, mood }));
+  }, [title, content, mood, currentId]);
 
   useEffect(() => {
     if (!initialized.current) {
@@ -234,6 +269,7 @@ function EntryEditor({
       } else {
         const e = create({ title: title || "Untitled entry", content, mood });
         setCurrentId(e.id);
+        localStorage.removeItem(DRAFT_KEY);
       }
       setStatus("saved");
       window.setTimeout(() => setStatus("idle"), 1500);
@@ -249,13 +285,25 @@ function EntryEditor({
       remove(currentId);
       toast.success("Entry deleted");
     }
+    localStorage.removeItem(DRAFT_KEY);
     onClose();
   };
 
   const handleDone = () => {
+    // Flush any pending debounced save immediately
+    if (saveTimer.current) window.clearTimeout(saveTimer.current);
+    if (title.trim() || content.trim()) {
+      if (currentId) {
+        update(currentId, { title, content, mood });
+      } else {
+        create({ title: title || "Untitled entry", content, mood });
+      }
+    }
+    localStorage.removeItem(DRAFT_KEY);
     toast.success(currentId ? "Entry saved" : "Saved to your journal");
     onClose();
   };
+
 
   return (
     <div className="max-w-3xl mx-auto px-6 md:px-10 py-8 md:py-12 animate-fade-in">
