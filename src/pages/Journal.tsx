@@ -9,9 +9,24 @@ import { toast } from "sonner";
 
 type View = { mode: "list" } | { mode: "edit"; id: string | "new" };
 
+const VIEW_KEY = "my-diary-view";
+
+function loadView(): View {
+  try {
+    const raw = localStorage.getItem(VIEW_KEY);
+    if (raw) return JSON.parse(raw) as View;
+  } catch { /* ignore */ }
+  return { mode: "list" };
+}
+
 export default function Journal() {
   const { entries, loading, create, update, remove, get } = useEntries();
-  const [view, setView] = useState<View>({ mode: "list" });
+  const [view, setView] = useState<View>(loadView);
+
+  useEffect(() => {
+    localStorage.setItem(VIEW_KEY, JSON.stringify(view));
+  }, [view]);
+
   const [query, setQuery] = useState("");
   const [mood, setMood] = useState<Mood | "all">("all");
 
