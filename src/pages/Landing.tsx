@@ -29,12 +29,9 @@ export default function Landing() {
 
         <div className="mt-10 flex flex-wrap items-center justify-center gap-3 animate-fade-up" style={{ animationDelay: "0.2s" }}>
           <Button asChild size="lg" className="rounded-full bg-foreground text-background hover:bg-foreground/90 px-7 h-12">
-            <Link to="/dashboard">
+            <Link to="/journal">
               Open my journal <ArrowRight className="ml-1.5 h-4 w-4" />
             </Link>
-          </Button>
-          <Button asChild size="lg" variant="ghost" className="rounded-full px-7 h-12 hover:bg-card">
-            <Link to="/editor/new">Start writing</Link>
           </Button>
         </div>
 
