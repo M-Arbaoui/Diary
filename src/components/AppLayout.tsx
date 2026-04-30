@@ -23,13 +23,13 @@ export default function AppLayout() {
 
   return (
     <div className="min-h-screen flex flex-col w-full bg-background">
-      <header className="sticky top-0 z-40 glass-nav">
-        <div className="h-16 flex items-center justify-between px-4 md:px-8 max-w-6xl mx-auto w-full">
-          <Link to="/" className="flex items-center gap-2.5">
+      <header className="sticky top-0 z-40 glass-nav safe-area-top">
+        <div className="h-16 md:h-16 flex items-center justify-between px-3 md:px-8 max-w-6xl mx-auto w-full">
+          <Link to="/" className="flex items-center gap-2 md:gap-2.5 flex-1 min-w-0">
             <img src="/favicon.png" alt="My Diary Logo" className="h-12 w-12 rounded-xl shadow-soft shrink-0" />
-            <div className="flex flex-col leading-tight">
-              <span className="font-serif text-lg text-ink">My Diary</span>
-              <span className="text-[10px] uppercase tracking-[0.18em] text-ink-muted">a quiet place</span>
+            <div className="flex flex-col leading-tight min-w-0">
+              <span className="font-serif text-base md:text-lg text-ink truncate">My Diary</span>
+              <span className="text-[9px] md:text-[10px] uppercase tracking-[0.18em] text-ink-muted truncate">a quiet place</span>
             </div>
           </Link>
           
@@ -37,7 +37,7 @@ export default function AppLayout() {
             variant="ghost"
             size="icon"
             onClick={toggleTheme}
-            className="rounded-full h-10 w-10 text-ink-muted hover:text-ink hover:bg-card"
+            className="rounded-full h-12 w-12 md:h-10 md:w-10 text-ink-muted hover:text-ink hover:bg-card ml-2 flex-shrink-0"
             title={`Toggle dark mode (Cmd/Ctrl + /)`}
           >
             {theme === "light" ? (

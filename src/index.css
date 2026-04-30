@@ -142,6 +142,7 @@
 @layer components {
   .glass-nav {
     @apply backdrop-blur-xl bg-background/60 border-b border-border/60;
+    padding-bottom: env(safe-area-inset-bottom);
   }
 
   .paper-card {
@@ -153,6 +154,32 @@
   .paper-card:hover {
     transform: translateY(-2px);
     box-shadow: var(--shadow-float);
+  }
+
+  /* Clear button styles for better visibility */
+  button, [role="button"] {
+    /* Ensure touch targets are at least 44x44px on mobile */
+    min-height: 44px;
+  }
+
+  .btn-primary {
+    @apply bg-foreground text-background hover:bg-foreground/90 active:bg-foreground/95;
+    @apply transition-all duration-200 font-medium;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .btn-primary:active {
+    transform: scale(0.98);
+  }
+
+  .btn-secondary {
+    @apply bg-card text-ink border border-border/70 hover:bg-accent hover:border-primary;
+    @apply transition-all duration-200;
+  }
+
+  .btn-ghost {
+    @apply text-ink-muted hover:text-ink hover:bg-card/80;
+    @apply transition-all duration-200;
   }
 
   .ink-link {
