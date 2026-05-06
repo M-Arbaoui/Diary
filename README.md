@@ -140,7 +140,3 @@ Typography: **Fraunces** (serif titles) + **Inter** (sans body).
 - **Backend:** Node.js, Express, Mongoose
 - **Database:** MongoDB 7
 - **Infra:** Docker, Docker Compose, nginx
-
----
-
-Made with quiet care. ✍️
